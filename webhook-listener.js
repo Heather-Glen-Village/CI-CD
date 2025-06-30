@@ -2,39 +2,34 @@ import http from 'http';
 import { exec } from 'child_process';
 
 const SECRET = 'supersecret';
-
 const server = http.createServer((req, res) => {
   if (req.method === 'POST' && req.url === '/webhook') {
     let body = '';
-    req.on('data', chunk => (body += chunk));
+    req.on('data', chunk => body += chunk);
     req.on('end', () => {
       try {
         const payload = JSON.parse(body);
-        if (payload.secret && payload.secret !== SECRET) {
+        if (payload.secret !== SECRET) {
           res.writeHead(403);
           return res.end('Forbidden');
         }
 
         const commands = `
-          # Tear down existing stacks
           cd /home/station3/Desktop/sensorhub-stack/server_compose &&
-          docker compose down &&
+          docker compose down --remove-orphans &&
 
           cd /home/station3/Desktop/sensorhub-stack/client_interface &&
-          docker compose down &&
+          docker compose down --remove-orphans &&
 
-          # Remove old code and clone fresh
           cd /home/station3/Desktop &&
           rm -rf sensorhub-stack &&
           git clone https://github.com/Heather-Glen-Village/sensorhub-stack.git sensorhub-stack &&
 
-          # Rebuild backend
-          cd /home/station3/Desktop/sensorhub-stack/server_compose &&
-          docker compose up -d --build &&
+          cd sensorhub-stack/server_compose &&
+          docker compose up -d --build --remove-orphans &&
 
-          # Rebuild frontend
           cd ../client_interface &&
-          docker compose up -d --build
+          docker compose up -d --build --remove-orphans
         `;
 
         exec(commands, { shell: '/bin/bash' }, (err, stdout, stderr) => {
@@ -49,7 +44,7 @@ const server = http.createServer((req, res) => {
         });
 
       } catch (err) {
-        console.error('❌ Bad request payload:', err);
+        console.error('❌ Bad request:', err);
         res.writeHead(400);
         res.end('Bad Request');
       }
@@ -64,5 +59,5 @@ server.listen(8085, '0.0.0.0', () => {
   console.log('🚀 Webhook listener running on port 8085');
 });
 
-// keep the process alive
+// keep alive
 setInterval(() => {}, 1 << 30);
