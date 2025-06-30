@@ -16,28 +16,30 @@ const server = http.createServer((req, res) => {
         }
 
         const commands = `
-          # find webhook-server container ID
-          WEBHOOK_ID=$(docker ps -aqf "name=webhook-server") &&
+          # Tear down existing stacks
+          cd /home/station3/Desktop/sensorhub-stack/server_compose &&
+          docker compose down &&
 
-          # remove all other containers
-          docker ps -aq | grep -v "$WEBHOOK_ID" | xargs -r docker rm -f &&
+          cd /home/station3/Desktop/sensorhub-stack/client_interface &&
+          docker compose down &&
 
-          # fresh clone
-          rm -rf /home/station3/Desktop/sensorhub-stack &&
-          git clone https://github.com/Heather-Glen-Village/sensorhub-stack.git /home/station3/Desktop/sensorhub-stack &&
+          # Remove old code and clone fresh
+          cd /home/station3/Desktop &&
+          rm -rf sensorhub-stack &&
+          git clone https://github.com/Heather-Glen-Village/sensorhub-stack.git sensorhub-stack &&
 
-          # rebuild backend
+          # Rebuild backend
           cd /home/station3/Desktop/sensorhub-stack/server_compose &&
           docker compose up -d --build &&
 
-          # rebuild frontend
+          # Rebuild frontend
           cd ../client_interface &&
           docker compose up -d --build
         `;
 
         exec(commands, { shell: '/bin/bash' }, (err, stdout, stderr) => {
           if (err) {
-            console.error('❌ Error during deploy:', stderr);
+            console.error('❌ Deploy error:', stderr);
             res.writeHead(500);
             return res.end('Deploy failed');
           }
