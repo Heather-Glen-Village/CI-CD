@@ -1,0 +1,5 @@
+authtoken: YOUR_AUTHTOKEN_HERE
+tunnels:
+  webhook:
+    proto: http
+    addr: webhook-server:8085
