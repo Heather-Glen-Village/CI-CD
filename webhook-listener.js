@@ -58,3 +58,6 @@ const server = http.createServer((req, res) => {
 server.listen(8085, '0.0.0.0', () => {
   console.log('🚀 Webhook listener running on port 8085');
 });
+
+// ✅ Keep Node process alive (so Docker/PM2 doesn't shut down)
+setInterval(() => {}, 1 << 30);
