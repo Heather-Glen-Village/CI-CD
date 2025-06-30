@@ -1,6 +1,6 @@
 version: "2"
 
-authtoken: 2z7Qgav8vnSt6QBv4bmhcDnCKod_6c5XZgMXSbe8x9bMvSJ5R
+authtoken: 
 tunnels:
   webhook:
     addr: 8085
