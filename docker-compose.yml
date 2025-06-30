@@ -5,14 +5,3 @@ services:
     build: .
     container_name: webhook-server
     restart: unless-stopped
-
-  ngrok:
-    image: ngrok/ngrok:latest
-    container_name: ngrok
-    depends_on:
-      - webhook-server
-    volumes:
-      - ./ngrok.yml:/etc/ngrok.yml
-    command: ["start", "--config", "/etc/ngrok.yml", "--all"]
-    restart: unless-stopped
-

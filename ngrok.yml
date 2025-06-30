@@ -1,8 +1,0 @@
-version: "2"
-
-authtoken: 
-tunnels:
-  webhook:
-    addr: 8085
-    proto: http
-    inspect: false
