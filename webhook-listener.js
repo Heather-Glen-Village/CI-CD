@@ -56,6 +56,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(8085, () => {
+server.listen(8085, '0.0.0.0', () => {
   console.log('🚀 Webhook listener running on port 8085');
 });
