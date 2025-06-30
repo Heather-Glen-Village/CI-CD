@@ -23,7 +23,7 @@ const server = http.createServer((req, res) => {
           docker rm -f next-auth-app || true &&
 
           rm -rf /home/station3/Desktop/sensorhub-stack &&
-          git clone https://github.com/Heather-Glen-Village/sensorhub-stack.git /home/station3/Desktop/ &&
+          git clone https://github.com/Heather-Glen-Village/sensorhub-stack.git /home/station3/Desktop/sensorhub-stack &&
 
           cd /home/station3/Desktop/sensorhub-stack/server_compose &&
           docker compose up -d --build &&
